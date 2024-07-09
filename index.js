@@ -31,7 +31,7 @@ module.exports = function (port, method = 'tcp') {
       })
   }
 
-  return sh('lsof -i -P')
+  return sh('lsof -ni -P')
     .then(res => {
       const { stdout } = res
       if (!stdout) return res
@@ -40,7 +40,7 @@ module.exports = function (port, method = 'tcp') {
       if (!existProccess) return Promise.reject(new Error('No process running on port'))
 
       return sh(
-        `lsof -i ${method === 'udp' ? 'udp' : 'tcp'}:${port} | grep ${method === 'udp' ? 'UDP' : 'LISTEN'} | awk '{print $2}' | xargs kill -9`
+        `lsof -ni ${method === 'udp' ? 'udp' : 'tcp'}:${port} | grep ${method === 'udp' ? 'UDP' : 'LISTEN'} | awk '{print $2}' | xargs kill -9`
       )
     })
 }
